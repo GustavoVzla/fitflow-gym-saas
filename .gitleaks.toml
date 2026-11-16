@@ -1,0 +1,17 @@
+title = "fitflow gitleaks config"
+
+# Extend the default rules set from gitleaks upstream
+[extend]
+useDefault = true
+
+# Allowlist for intentional public keys (NEXT_PUBLIC_* by design)
+[allowlist]
+description = "NEXT_PUBLIC_* keys son publicas por diseno (se sirven al browser). RLS es el muro real."
+paths = [
+  '''DEPLOY_PREFLIGHT\.md''',
+  '''\.env\.example''',
+]
+regexes = [
+  '''NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ[A-Za-z0-9\._-]+\.\.\.''',
+  '''NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_[A-Za-z0-9_]+''',
+]

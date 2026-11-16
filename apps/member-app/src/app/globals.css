@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+@theme {
+  /* Background layers */
+  --color-bg-deep: #0d0d1a;
+  --color-bg-primary: #1a1a2e;
+
+  /* Brand (FitFlow blue, Panel-aligned #3b8bea) */
+  --color-brand: #3b8bea;
+  --color-brand-light: #5da0ef;
+  --color-brand-dark: #2a6fc7;
+  --color-brand-dim: rgba(59, 139, 234, 0.15);
+  --color-brand-glow: rgba(59, 139, 234, 0.3);
+
+  /* Text on dark */
+  --color-text-primary: #f0f0f5;
+  --color-text-secondary: rgba(240, 240, 245, 0.6);
+  --color-text-muted: rgba(240, 240, 245, 0.35);
+
+  /* Glass-morphism */
+  --color-glass: rgba(255, 255, 255, 0.06);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-bg-card: rgba(255, 255, 255, 0.04);
+  --color-bg-card-hover: rgba(255, 255, 255, 0.07);
+
+  /* Semantic */
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #f59e0b;
+  --color-info: #60a5fa;
+
+  /* Typography */
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+
+  /* Radius */
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+
+  /* Transition */
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html,
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0d0d1a;
+  color: #f0f0f5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Glass card — porting del demo */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Hero próxima clase — gradient + glow decorativo brand */
+.hero-card {
+  background: linear-gradient(135deg, rgba(59, 139, 234, 0.12), rgba(59, 139, 234, 0.04));
+  border: 1px solid rgba(59, 139, 234, 0.2);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(59, 139, 234, 0.15), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Member card — gradient + diamond pattern */
+.member-card {
+  background: linear-gradient(135deg, #1e1e3a 0%, #16162e 50%, #1a1a30 100%);
+  border: 1px solid rgba(59, 139, 234, 0.15);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.member-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L55 30 L30 55 L5 30Z' fill='none' stroke='rgba(59,139,234,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Tab bar backdrop blur 20px del demo */
+.tab-bar-blur {
+  /* Bg sólido más claro que el body para SEPARAR visualmente (P0 fix) */
+  background: linear-gradient(to top, #1a1a2e 0%, rgba(26, 26, 46, 0.92) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  /* Sombra superior fuerte para crear elevación */
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5), 0 -1px 0 rgba(59, 139, 234, 0.2);
+  /* Border-top tinte brand más visible que el rgba blanco original */
+  border-top: 1px solid rgba(59, 139, 234, 0.25);
+}
+
+/* Day pill scrollable horizontal sin scrollbar */
+.day-selector {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.day-selector::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar utilitario */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

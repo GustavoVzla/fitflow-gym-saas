@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@fitflow/lib/*": ["../../src/lib/*"],
+      "@fitflow/types/*": ["../../src/types/*"],
+      "@fitflow/components/*": ["../../src/components/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

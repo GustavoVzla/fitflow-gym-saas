@@ -1,0 +1,64 @@
+name: Smoke Test Production
+
+on:
+  # Portfolio copy: manual only (point the URL at your own deployment)
+  workflow_dispatch:
+
+concurrency:
+  group: smoke-test-prod
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: Smoke test 4 critical routes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Wait for Vercel auto-deploy to complete
+        run: sleep 120
+
+      - name: Curl critical routes
+        id: curl
+        run: |
+          set -u
+          failures=0
+          results=""
+          # Canonical domain post-D-PM2: panel.example.com (panel admin/tenant)
+          # Compat 7 días: app.example.com sigue sirviendo (dual domain Vercel)
+          for route in "/" "/login" "/admin" "/mi-cuenta"; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://panel.example.com$route")
+            echo "$route -> $code"
+            results="$results\n$route -> $code"
+            if [ "$code" -ge 500 ]; then
+              failures=$((failures + 1))
+            fi
+          done
+          echo "failures=$failures" >> "$GITHUB_OUTPUT"
+          {
+            echo 'results<<EOF'
+            printf "%b\n" "$results"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          if [ "$failures" -gt 0 ]; then
+            echo "::error::Smoke test failed: $failures route(s) returned 5xx"
+            exit 1
+          fi
+
+      - name: Create auto-issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commit = context.sha.substring(0, 7);
+            const body = `Smoke test failed on commit ${commit} after deploy.\n\n` +
+              `Results:\n\`\`\`\n${{ steps.curl.outputs.results }}\n\`\`\`\n\n` +
+              `Workflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}\n\n` +
+              `Rollback: visit Vercel dashboard, promote previous READY deployment.`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Smoke test failed after deploy ${commit}`,
+              body,
+              labels: ['bug', 'production-incident', 'auto-generated'],
+            });
